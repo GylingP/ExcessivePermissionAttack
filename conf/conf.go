@@ -6,6 +6,7 @@ import "k8sRBACdetect/structure"
 // ClusterRole(get is used to view permissions verb)、Role(Full space get)、Nodes(list is used to find remaining normal nodes when Patch)
 var AdminCert = ""
 var AdminCertKey = ""
+var CACert = ""
 var ApiServer = ""
 var TokenFile = ""
 var Kubeconfig = ""

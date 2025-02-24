@@ -3,6 +3,7 @@ package request
 import (
 	"bytes"
 	"crypto/tls"
+	//"crypto/x509"
 	"io/ioutil"
 	"k8sRBACdetect/conf"
 	"net/http"
@@ -12,6 +13,7 @@ import (
 
 type K8sRequestOption struct {
 	Token    string
+	caCert   string
 	cert     string
 	key      string
 	Server   string
@@ -43,14 +45,25 @@ func ApiRequest(opts K8sRequestOption) (string, error) {
 	var cert tls.Certificate
 	if opts.Token != "" {
 	} else if string(tokenBytes) != "" {
-		opts.Token = string(tokenBytes)
+		opts.Token = strings.TrimSpace(string(tokenBytes))
 	} else if opts.Token == "" {
+		if opts.caCert == ""{
+			opts.caCert = conf.CACert
+		}
 		if opts.cert == "" {
 			opts.cert = conf.AdminCert
 		}
 		if opts.key == "" {
 			opts.key = conf.AdminCertKey
 		}
+		// ccaCert, err := ioutil.ReadFile(opts.caCert)
+	        // if err != nil {
+		//        return "",err
+	        // }
+		// caCertPool := x509.NewCertPool()
+                // if !caCertPool.AppendCertsFromPEM(caCert) {
+		//       return "",err
+	        // }
 		cert, err = tls.LoadX509KeyPair(opts.cert, opts.key)
 		if err != nil {
 			return "", err
